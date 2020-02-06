@@ -17,7 +17,7 @@ import {
 } from 'react-native';
 import {StockList} from './StockList';
 
-const Home = () => {
+const Home = ({navigation}) => {
   return (
     <>
       <StatusBar barStyle="dark-content" />
@@ -27,10 +27,10 @@ const Home = () => {
         </View>
         {/* <StockForm onSubmit={values => console.log(values)} /> */}
         <StockList />
-        {/*<Button*/}
-        {/*  title="Go to Home2"*/}
-        {/*  onPress={() => navigation.navigate('Home2')}*/}
-        {/*/>*/}
+        <Button
+          title="Go to Home 2"
+          onPress={() => navigation.navigate('Home 2')}
+        />
       </SafeAreaView>
     </>
   );
