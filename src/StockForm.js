@@ -1,5 +1,8 @@
 import React from 'react';
+import {connect} from 'react-redux';
+import {PropTypes} from 'prop-types';
 import {View, TextInput, Button, StyleSheet} from 'react-native';
+import {addCurrency} from './actions';
 
 export class StockForm extends React.Component {
   state = {
@@ -8,6 +11,7 @@ export class StockForm extends React.Component {
   };
 
   render() {
+    const {navigation} = this.props;
     return (
       <View>
         <TextInput
@@ -27,13 +31,38 @@ export class StockForm extends React.Component {
         />
         <Button
           title="Submit"
-          onPress={() => this.props.onSubmit(this.state)}
+          onPress={() => {
+            this.props.onSubmit(this.state);
+            navigation.navigate('Home');
+          }}
         />
       </View>
     );
   }
 }
 
+// StockForm.contextTypes = {store: PropTypes.object};
+
 const styles = StyleSheet.create({
   textInput: {height: 80, padding: 20},
 });
+
+const mapDispatchToProps = {
+  onSubmit: onSubmit,
+};
+
+function onSubmit(currency) {
+  return dispatch => {
+    dispatch(
+      addCurrency({
+        symbol: currency.stockSymbol,
+        amount: currency.count,
+      })
+    );
+  };
+}
+
+export default connect(
+  null,
+  mapDispatchToProps
+)(StockForm);

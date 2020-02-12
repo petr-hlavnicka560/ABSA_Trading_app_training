@@ -15,7 +15,7 @@ import {
   View,
   Button,
 } from 'react-native';
-import {StockList} from './StockList';
+import StockList from './StockList';
 
 const Home = ({navigation}) => {
   return (
@@ -28,8 +28,8 @@ const Home = ({navigation}) => {
         {/* <StockForm onSubmit={values => console.log(values)} /> */}
         <StockList />
         <Button
-          title="Go to Home 2"
-          onPress={() => navigation.navigate('Home 2')}
+          title="Add currency"
+          onPress={() => navigation.navigate('Add currency')}
         />
       </SafeAreaView>
     </>
