@@ -1,8 +1,6 @@
 import React from 'react';
-import {PropTypes} from 'prop-types';
 import {View, Text, FlatList, ActivityIndicator} from 'react-native';
 import {connect} from 'react-redux';
-import {addCurrency} from './actions';
 
 export class StockList extends React.Component {
   constructor(props) {
@@ -11,8 +9,6 @@ export class StockList extends React.Component {
   }
 
   componentDidMount() {
-    // const {store} = this.context;
-    // this.currencies = store.getState().currencies;
     const promises = this.props.currencies.map(currency => {
       return fetch(
         `https://rest.coinapi.io/v1/exchangerate/${currency.symbol}/USD`,
@@ -25,20 +21,6 @@ export class StockList extends React.Component {
     });
 
     console.log('===Promises:', promises);
-
-    // const btcRate = fetch('https://rest.coinapi.io/v1/exchangerate/BTC/USD', {
-    //   headers: {
-    //     'X-CoinAPI-Key': 'EFD6B937-F769-4397-968E-EF29497303C5',
-    //   },
-    // })
-    //   .then(response => response.json())
-    //   .then(json => console.log(`===== btcRate reply: ${json}`));
-
-    // const ethRate = fetch('https://rest.coinapi.io/v1/exchangerate/ETH/USD', {
-    //   headers: {
-    //     'X-CoinAPI-Key': 'EFD6B937-F769-4397-968E-EF29497303C5',
-    //   },
-    // }).then(response => response.json());
 
     Promise.all(promises)
       .then(responsesJson => {
@@ -57,9 +39,6 @@ export class StockList extends React.Component {
   }
 
   render() {
-    // const {store} = this.context;
-    // let currencies = store.getState().currencies;
-
     if (this.state.isLoading) {
       return (
         <View style={{flex: 1, padding: 20}}>
@@ -83,25 +62,11 @@ export class StockList extends React.Component {
   }
 }
 
-// StockList.contextTypes = {store: PropTypes.object};
-
 const mapStateToProps = state => ({
   currencies: [...state.appData.currencies],
 });
 
-//placeholder only not to pass null to connect
-const mapDispatchToProps = dispatch => ({
-  onSubmit(currency) {
-    dispatch(
-      addCurrency({
-        symbol: currency.stockSymbol,
-        amount: currency.count,
-      })
-    );
-  },
-});
-
 export default connect(
   mapStateToProps,
-  mapDispatchToProps
+  null
 )(StockList);

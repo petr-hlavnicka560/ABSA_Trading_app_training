@@ -1,6 +1,5 @@
 import React from 'react';
 import {connect} from 'react-redux';
-import {PropTypes} from 'prop-types';
 import {View, TextInput, Button, StyleSheet} from 'react-native';
 import {addCurrency} from './actions';
 
@@ -40,8 +39,6 @@ export class StockForm extends React.Component {
     );
   }
 }
-
-// StockForm.contextTypes = {store: PropTypes.object};
 
 const styles = StyleSheet.create({
   textInput: {height: 80, padding: 20},
