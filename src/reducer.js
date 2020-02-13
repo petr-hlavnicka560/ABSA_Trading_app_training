@@ -1,14 +1,31 @@
 import {combineReducers} from 'redux';
-import {ADD_CURRENCY} from './actions';
+import {
+  ADD_CURRENCY,
+  CHANGE_AMOUNT_HELD_FINISH,
+  CHANGE_AMOUNT_HELD_START,
+} from './actions';
 
-const initialCurrencies = {
+const initialState = {
   currencies: [{symbol: 'BTC', amount: 10}, {symbol: 'ETH', amount: 5}],
 };
 
-function appData(state = initialCurrencies, action) {
+function appData(state = initialState, action) {
   switch (action.type) {
     case ADD_CURRENCY: {
-      return {currencies: [...state.currencies, action.payload]};
+      return {...state, currencies: [...state.currencies, action.payload]};
+    }
+    case CHANGE_AMOUNT_HELD_START: {
+      return {...state, stockSymbolInChange: action.payload};
+    }
+    case CHANGE_AMOUNT_HELD_FINISH: {
+      return {
+        ...state,
+        currencies: state.currencies.map(currency =>
+          currency.symbol === action.payload.symbol
+            ? {symbol: currency.symbol, amount: action.payload.amount}
+            : currency
+        ),
+      };
     }
     default:
       return state;

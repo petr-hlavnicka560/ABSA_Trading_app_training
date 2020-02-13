@@ -17,7 +17,7 @@ import {
 } from 'react-native';
 import StockList from './StockList';
 
-const Home = ({navigation}) => {
+const StockListScreen = ({navigation}) => {
   return (
     <>
       <StatusBar barStyle="dark-content" />
@@ -26,7 +26,7 @@ const Home = ({navigation}) => {
           <Text style={styles.headerText}>Trading App</Text>
         </View>
         {/* <StockForm onSubmit={values => console.log(values)} /> */}
-        <StockList />
+        <StockList navigation={navigation} />
         <Button
           title="Add currency"
           onPress={() => navigation.navigate('Add currency')}
@@ -47,4 +47,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Home;
+export default StockListScreen;

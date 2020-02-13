@@ -1,12 +1,17 @@
 import React from 'react';
-import {View, Text, FlatList, ActivityIndicator} from 'react-native';
+import {
+  View,
+  Text,
+  FlatList,
+  ActivityIndicator,
+  Button,
+  StyleSheet,
+} from 'react-native';
 import {connect} from 'react-redux';
+import {changeAmountHeldStart} from './actions';
 
-export class StockList extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {rates: {}, isLoading: true};
-  }
+class StockList extends React.Component {
+  state = {rates: {}, isLoading: true};
 
   componentDidMount() {
     const promises = this.props.currencies.map(currency => {
@@ -46,14 +51,29 @@ export class StockList extends React.Component {
         </View>
       );
     }
+    const {navigation} = this.props;
+    console.log(navigation);
     return (
       <View>
         <Text>StockList</Text>
         <FlatList
           data={this.props.currencies}
           renderItem={({item}) => (
-            <Text>{`${item.symbol}: ${item.amount *
-              this.state.rates[item.symbol]}`}</Text>
+            <View style={styles.tableLine}>
+              <Text>
+                {`Symbol: ${item.symbol} Amount held: ${
+                  item.amount
+                } Value: ${item.amount * this.state.rates[item.symbol]}`}
+              </Text>
+              <Button
+                style={styles.button}
+                title="Change"
+                onPress={() => {
+                  this.props.onSubmit(item.symbol);
+                  navigation.navigate('Change Amount Held');
+                }}
+              />
+            </View>
           )}
           keyExtractor={item => item.symbol}
         />
@@ -63,10 +83,25 @@ export class StockList extends React.Component {
 }
 
 const mapStateToProps = state => ({
-  currencies: [...state.appData.currencies],
+  currencies: state.appData.currencies,
 });
+
+const mapDispatchToProps = {
+  onSubmit: onSubmit,
+};
+
+function onSubmit(symbol) {
+  return dispatch => {
+    dispatch(changeAmountHeldStart(symbol));
+  };
+}
 
 export default connect(
   mapStateToProps,
-  null
+  mapDispatchToProps
 )(StockList);
+
+const styles = StyleSheet.create({
+  button: {width: '50%'}, //does not work
+  tableLine: {flexDirection: 'row', alignItems: 'center'},
+});
