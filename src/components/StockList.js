@@ -8,7 +8,6 @@ import {
   StyleSheet,
 } from 'react-native';
 import {connect} from 'react-redux';
-import {changeAmountHeldStart} from './actions';
 
 class StockList extends React.Component {
   state = {rates: {}, isLoading: true};
@@ -69,8 +68,11 @@ class StockList extends React.Component {
                 style={styles.button}
                 title="Change"
                 onPress={() => {
-                  this.props.onSubmit(item.symbol);
-                  navigation.navigate('Change Amount Held');
+                  navigation.navigate('Add currency', {
+                    symbolIsEditable: false,
+                    symbolOfCurrencyUpdated: item.symbol,
+                    amountOfCurrencyUpdated: item.amount.toString(),
+                  });
                 }}
               />
             </View>
@@ -82,26 +84,16 @@ class StockList extends React.Component {
   }
 }
 
-const mapStateToProps = state => ({
-  currencies: state.appData.currencies,
-});
-
-const mapDispatchToProps = {
-  onSubmit: onSubmit,
-};
-
-function onSubmit(symbol) {
-  return dispatch => {
-    dispatch(changeAmountHeldStart(symbol));
-  };
-}
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(StockList);
-
 const styles = StyleSheet.create({
   button: {width: '50%'}, //does not work
   tableLine: {flexDirection: 'row', alignItems: 'center'},
 });
+
+const mapStateToProps = state => ({
+  currencies: state.appData.currencies,
+});
+
+export default connect(
+  mapStateToProps,
+  null
+)(StockList);

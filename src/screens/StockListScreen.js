@@ -15,7 +15,7 @@ import {
   View,
   Button,
 } from 'react-native';
-import StockList from './StockList';
+import StockList from '../components/StockList';
 
 const StockListScreen = ({navigation}) => {
   return (
@@ -25,11 +25,12 @@ const StockListScreen = ({navigation}) => {
         <View style={styles.header}>
           <Text style={styles.headerText}>Trading App</Text>
         </View>
-        {/* <StockForm onSubmit={values => console.log(values)} /> */}
         <StockList navigation={navigation} />
         <Button
           title="Add currency"
-          onPress={() => navigation.navigate('Add currency')}
+          onPress={() =>
+            navigation.navigate('Add currency', {symbolIsEditable: true})
+          }
         />
       </SafeAreaView>
     </>

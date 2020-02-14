@@ -12,9 +12,8 @@ import {Provider} from 'react-redux';
 import configureStore from './configureStore';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
-import StockListScreen from './StockListScreen';
-import StockForm from './StockForm';
-import AmountHeldChange from './AmountHeldChange';
+import StockListScreen from './screens/StockListScreen';
+import StockFormScreen from './screens/StockFormScreen';
 
 const Stack = createStackNavigator();
 
@@ -27,11 +26,7 @@ class App extends Component {
         <NavigationContainer>
           <Stack.Navigator initialRouteName="Home">
             <Stack.Screen name="Home" component={StockListScreen} />
-            <Stack.Screen name="Add currency" component={StockForm} />
-            <Stack.Screen
-              name="Change Amount Held"
-              component={AmountHeldChange}
-            />
+            <Stack.Screen name="Add currency" component={StockFormScreen} />
           </Stack.Navigator>
         </NavigationContainer>
       </Provider>
