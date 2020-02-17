@@ -8,40 +8,12 @@ import {
   StyleSheet,
 } from 'react-native';
 import {connect} from 'react-redux';
+import {loadCurrencies} from '../actions';
 
 class StockList extends React.Component {
-  state = {rates: {}, isLoading: true};
-
-  componentDidMount() {
-    console.log('======== INSIDE componentDidMount()');
-    const promises = this.props.currencies.map(currency => {
-      return fetch(
-        `https://sandbox.iexapis.com/stable/stock/${
-          currency.symbol
-        }/quote?token=Tpk_d6fe47c7f6f54c389c7ac9c0c60f5e2c`
-      ).then(response => response.json());
-    });
-
-    console.log('===Promises:', promises);
-
-    Promise.all(promises)
-      .then(responsesJson => {
-        console.log('===== responsesJson: ', responsesJson);
-        const rates = this.props.currencies.reduce((acc, val, idx) => {
-          acc[val.symbol] = responsesJson[idx].latestPrice;
-          return acc;
-        }, {});
-        console.log('===== rates: ', rates);
-        this.setState({
-          rates,
-          isLoading: false,
-        });
-      })
-      .catch(error => console.log(error));
-  }
-
   render() {
-    if (this.state.isLoading) {
+    if (this.props.isLoading) {
+      loadData(this.props.currencies, this.props.dispatchLoadCurrencies);
       return (
         <View style={{flex: 1, padding: 20}}>
           <ActivityIndicator />
@@ -60,7 +32,7 @@ class StockList extends React.Component {
               <Text>
                 {`Symbol: ${item.symbol} Amount held: ${
                   item.amount
-                } Value: ${item.amount * this.state.rates[item.symbol]}`}
+                } Value: ${item.amount * item.rate}`}
               </Text>
               <Button
                 style={styles.button}
@@ -87,11 +59,47 @@ const styles = StyleSheet.create({
   tableLine: {flexDirection: 'row', alignItems: 'center'},
 });
 
+function loadData(currencies, dispatchLoadCurrencies) {
+  console.log('======== INSIDE componentDidMount()');
+  const promises = currencies.map(currency => {
+    return fetch(
+      `https://sandbox.iexapis.com/stable/stock/${
+        currency.symbol
+      }/quote?token=Tpk_d6fe47c7f6f54c389c7ac9c0c60f5e2c`
+    ).then(response => response.json());
+  });
+
+  console.log('===Promises:', promises);
+
+  Promise.all(promises)
+    .then(responsesJson => {
+      console.log('===== responsesJson: ', responsesJson);
+      const updatedCurrencies = currencies.map((val, idx) => {
+        return {...val, rate: responsesJson[idx].latestPrice};
+      });
+      const updatedState = {currencies: updatedCurrencies, isLoading: false};
+      console.log('===== updatedCurrencies: ', updatedCurrencies);
+      dispatchLoadCurrencies(updatedState);
+    })
+    .catch(error => console.log(error));
+}
+
 const mapStateToProps = state => ({
   currencies: state.appData.currencies,
+  isLoading: state.appData.isLoading,
 });
+
+const mapDispatchToProps = {
+  dispatchLoadCurrencies: dispatchLoadCurrencies,
+};
+
+function dispatchLoadCurrencies(state) {
+  return dispatch => {
+    dispatch(loadCurrencies(state));
+  };
+}
 
 export default connect(
   mapStateToProps,
-  null
+  mapDispatchToProps
 )(StockList);

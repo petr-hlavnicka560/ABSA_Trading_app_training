@@ -1,7 +1,7 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import {View, TextInput, Button, StyleSheet} from 'react-native';
-import {addCurrency, changeAmountHeldFinish} from '../actions';
+import {addCurrency, changeAmountHeld, toggleIsLoading} from '../actions';
 
 export class StockFormScreen extends React.Component {
   state = {
@@ -61,13 +61,14 @@ const mapDispatchToProps = {
 function onSubmitAddCurrency(currency) {
   return dispatch => {
     dispatch(addCurrency(currency));
+    dispatch(toggleIsLoading(true));
   };
 }
 
 function onSubmitAmountHeldUpdate(symbol, amount) {
   return dispatch => {
     dispatch(
-      changeAmountHeldFinish({
+      changeAmountHeld({
         symbol: symbol,
         amount: amount,
       })

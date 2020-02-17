@@ -1,12 +1,14 @@
 import {combineReducers} from 'redux';
 import {
   ADD_CURRENCY,
-  CHANGE_AMOUNT_HELD_FINISH,
-  CHANGE_AMOUNT_HELD_START,
+  CHANGE_AMOUNT_HELD,
+  CURRENCIES_LOAD,
+  TOGGLE_IS_LOADING,
 } from './actions';
 
 const initialState = {
   currencies: [{symbol: 'IBM', amount: 10}, {symbol: 'XOM', amount: 5}],
+  isLoading: true,
 };
 
 function appData(state = initialState, action) {
@@ -14,15 +16,22 @@ function appData(state = initialState, action) {
     case ADD_CURRENCY: {
       return {...state, currencies: [...state.currencies, action.payload]};
     }
-    case CHANGE_AMOUNT_HELD_START: {
-      return {...state, stockSymbolInChange: action.payload};
+    case TOGGLE_IS_LOADING: {
+      return {...state, isLoading: action.payload};
     }
-    case CHANGE_AMOUNT_HELD_FINISH: {
+    case CURRENCIES_LOAD: {
+      return action.payload;
+    }
+    case CHANGE_AMOUNT_HELD: {
       return {
         ...state,
         currencies: state.currencies.map(currency =>
           currency.symbol === action.payload.symbol
-            ? {symbol: currency.symbol, amount: action.payload.amount}
+            ? {
+                symbol: currency.symbol,
+                rate: currency.rate,
+                amount: action.payload.amount,
+              }
             : currency
         ),
       };
