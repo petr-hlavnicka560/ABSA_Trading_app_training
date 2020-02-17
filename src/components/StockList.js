@@ -59,29 +59,33 @@ const styles = StyleSheet.create({
   tableLine: {flexDirection: 'row', alignItems: 'center'},
 });
 
-function loadData(currencies, dispatchLoadCurrencies) {
+async function loadData(currencies, dispatchLoadCurrencies) {
   console.log('======== INSIDE componentDidMount()');
-  const promises = currencies.map(currency => {
-    return fetch(
+  const promises = currencies.map(async currency => {
+    const response = await fetch(
       `https://sandbox.iexapis.com/stable/stock/${
         currency.symbol
       }/quote?token=Tpk_d6fe47c7f6f54c389c7ac9c0c60f5e2c`
-    ).then(response => response.json());
+    );
+    return response.json();
   });
 
   console.log('===Promises:', promises);
 
-  Promise.all(promises)
-    .then(responsesJson => {
-      console.log('===== responsesJson: ', responsesJson);
-      const updatedCurrencies = currencies.map((val, idx) => {
-        return {...val, rate: responsesJson[idx].latestPrice};
-      });
-      const updatedState = {currencies: updatedCurrencies, isLoading: false};
-      console.log('===== updatedCurrencies: ', updatedCurrencies);
-      dispatchLoadCurrencies(updatedState);
-    })
-    .catch(error => console.log(error));
+  let responsesJson;
+  try {
+    responsesJson = await Promise.all(promises);
+  } catch (e) {
+    alert(e);
+  }
+
+  console.log('===== responsesJson: ', responsesJson);
+  const updatedCurrencies = currencies.map((val, idx) => {
+    return {...val, rate: responsesJson[idx].latestPrice};
+  });
+  const updatedState = {currencies: updatedCurrencies, isLoading: false};
+  console.log('===== updatedCurrencies: ', updatedCurrencies);
+  dispatchLoadCurrencies(updatedState);
 }
 
 const mapStateToProps = state => ({
