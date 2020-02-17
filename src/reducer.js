@@ -6,7 +6,7 @@ import {
 } from './actions';
 
 const initialState = {
-  currencies: [{symbol: 'BTC', amount: 10}, {symbol: 'ETH', amount: 5}],
+  currencies: [{symbol: 'IBM', amount: 10}, {symbol: 'XOM', amount: 5}],
 };
 
 function appData(state = initialState, action) {

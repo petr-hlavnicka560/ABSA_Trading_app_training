@@ -10,12 +10,12 @@ export class StockFormScreen extends React.Component {
   };
 
   render() {
-    const {navigation} = this.props;
+    const {navigation, route} = this.props;
     const {
       symbolIsEditable,
       symbolOfCurrencyUpdated,
       amountOfCurrencyUpdated,
-    } = this.props.route.params;
+    } = route.params;
     return (
       <View>
         <TextInput

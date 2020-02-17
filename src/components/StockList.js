@@ -13,14 +13,12 @@ class StockList extends React.Component {
   state = {rates: {}, isLoading: true};
 
   componentDidMount() {
+    console.log('======== INSIDE componentDidMount()');
     const promises = this.props.currencies.map(currency => {
       return fetch(
-        `https://rest.coinapi.io/v1/exchangerate/${currency.symbol}/USD`,
-        {
-          headers: {
-            'X-CoinAPI-Key': 'DE9AE379-7C5A-4738-99EF-535EC6A6AF09',
-          },
-        }
+        `https://sandbox.iexapis.com/stable/stock/${
+          currency.symbol
+        }/quote?token=Tpk_d6fe47c7f6f54c389c7ac9c0c60f5e2c`
       ).then(response => response.json());
     });
 
@@ -30,7 +28,7 @@ class StockList extends React.Component {
       .then(responsesJson => {
         console.log('===== responsesJson: ', responsesJson);
         const rates = this.props.currencies.reduce((acc, val, idx) => {
-          acc[val.symbol] = responsesJson[idx].rate;
+          acc[val.symbol] = responsesJson[idx].latestPrice;
           return acc;
         }, {});
         console.log('===== rates: ', rates);
