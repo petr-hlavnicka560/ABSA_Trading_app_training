@@ -16,26 +16,37 @@ import {
   Button,
 } from 'react-native';
 import StockList from '../components/StockList';
+import routes from '../routes';
+import {changeStockFormScreenTitle} from '../actions';
+import {connect} from 'react-redux';
 
-const StockListScreen = ({navigation}) => {
-  return (
-    <>
-      <StatusBar barStyle="dark-content" />
-      <SafeAreaView>
-        <View style={styles.header}>
-          <Text style={styles.headerText}>Trading App</Text>
-        </View>
-        <StockList navigation={navigation} />
-        <Button
-          title="Add currency"
-          onPress={() =>
-            navigation.navigate('Add currency', {symbolIsEditable: true})
-          }
-        />
-      </SafeAreaView>
-    </>
-  );
-};
+class StockListScreen extends React.Component {
+  render() {
+    const {navigation} = this.props;
+    return (
+      <>
+        <StatusBar barStyle="dark-content" />
+        <SafeAreaView>
+          <View style={styles.header}>
+            <Text style={styles.headerText}>Trading App</Text>
+          </View>
+          <StockList navigation={navigation} />
+          <Button
+            title="Add currency"
+            onPress={() => {
+              this.props.onSubmitNavigateToAddCurrency(
+                routes.stockFormScreen.titleAddCurrency
+              );
+              navigation.navigate(routes.stockFormScreen.name, {
+                isAddCurrency: true,
+              });
+            }}
+          />
+        </SafeAreaView>
+      </>
+    );
+  }
+}
 
 const styles = StyleSheet.create({
   header: {
@@ -48,4 +59,11 @@ const styles = StyleSheet.create({
   },
 });
 
-export default StockListScreen;
+const mapDispatchToProps = {
+  onSubmitNavigateToAddCurrency: changeStockFormScreenTitle,
+};
+
+export default connect(
+  null,
+  mapDispatchToProps
+)(StockListScreen);

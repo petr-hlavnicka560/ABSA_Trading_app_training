@@ -2,13 +2,14 @@ import {combineReducers} from 'redux';
 import {
   ADD_CURRENCY,
   CHANGE_AMOUNT_HELD,
-  CURRENCIES_LOAD,
-  TOGGLE_IS_LOADING,
+  CHANGE_STOCK_FORM_SCREEN_TITLE,
+  RATES_LOADED,
+  TURN_ON_IS_LOADING,
 } from './actions';
 
 const initialState = {
   currencies: [{symbol: 'IBM', amount: 10}, {symbol: 'XOM', amount: 5}],
-  isLoading: true,
+  // stockFormScreenTitle: 'TEST',
 };
 
 function appData(state = initialState, action) {
@@ -16,11 +17,14 @@ function appData(state = initialState, action) {
     case ADD_CURRENCY: {
       return {...state, currencies: [...state.currencies, action.payload]};
     }
-    case TOGGLE_IS_LOADING: {
-      return {...state, isLoading: action.payload};
+    case CHANGE_STOCK_FORM_SCREEN_TITLE: {
+      return {...state, stockFormScreenTitle: action.payload};
     }
-    case CURRENCIES_LOAD: {
-      return action.payload;
+    case TURN_ON_IS_LOADING: {
+      return {...state, isLoading: true};
+    }
+    case RATES_LOADED: {
+      return {currencies: action.payload, isLoading: false};
     }
     case CHANGE_AMOUNT_HELD: {
       return {

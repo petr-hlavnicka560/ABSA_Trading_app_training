@@ -1,9 +1,10 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import {View, TextInput, Button, StyleSheet} from 'react-native';
-import {addCurrency, changeAmountHeld, toggleIsLoading} from '../actions';
+import {addCurrencyAndReloadRates, changeAmountHeld} from '../actions';
+import routes from '../routes';
 
-export class StockFormScreen extends React.Component {
+class StockFormScreen extends React.Component {
   state = {
     symbol: '',
     amount: '',
@@ -12,7 +13,7 @@ export class StockFormScreen extends React.Component {
   render() {
     const {navigation, route} = this.props;
     const {
-      symbolIsEditable,
+      isAddCurrency,
       symbolOfCurrencyUpdated,
       amountOfCurrencyUpdated,
     } = route.params;
@@ -21,13 +22,13 @@ export class StockFormScreen extends React.Component {
         <TextInput
           style={styles.textInput}
           placeholder="Stock symbol!"
-          editable={symbolIsEditable}
+          editable={isAddCurrency}
           onChangeText={text => this.setState({symbol: text.toUpperCase()})}
-          value={symbolIsEditable ? this.state.symbol : symbolOfCurrencyUpdated}
+          value={isAddCurrency ? this.state.symbol : symbolOfCurrencyUpdated}
         />
         <TextInput
           style={styles.textInput}
-          placeholder={symbolIsEditable ? 'Count!' : amountOfCurrencyUpdated}
+          placeholder={isAddCurrency ? 'Count!' : amountOfCurrencyUpdated}
           keyboardType="number-pad"
           onChangeText={text => this.setState({amount: text})}
           value={this.state.amount}
@@ -35,13 +36,13 @@ export class StockFormScreen extends React.Component {
         <Button
           title="Submit"
           onPress={() => {
-            symbolIsEditable
+            isAddCurrency
               ? this.props.onSubmitAddCurrency(this.state)
               : this.props.onSubmitAmountHeldUpdate(
                   symbolOfCurrencyUpdated,
                   this.state.amount
                 );
-            navigation.navigate('Home');
+            navigation.navigate(routes.stockListScreen.name);
           }}
         />
       </View>
@@ -53,17 +54,14 @@ const styles = StyleSheet.create({
   textInput: {height: 80, padding: 20},
 });
 
+const mapStateToProps = state => ({
+  currencies: state.appData.currencies,
+});
+
 const mapDispatchToProps = {
-  onSubmitAddCurrency: onSubmitAddCurrency,
+  onSubmitAddCurrency: addCurrencyAndReloadRates,
   onSubmitAmountHeldUpdate: onSubmitAmountHeldUpdate,
 };
-
-function onSubmitAddCurrency(currency) {
-  return dispatch => {
-    dispatch(addCurrency(currency));
-    dispatch(toggleIsLoading(true));
-  };
-}
 
 function onSubmitAmountHeldUpdate(symbol, amount) {
   return dispatch => {
@@ -77,6 +75,6 @@ function onSubmitAmountHeldUpdate(symbol, amount) {
 }
 
 export default connect(
-  null,
+  mapStateToProps,
   mapDispatchToProps
 )(StockFormScreen);
