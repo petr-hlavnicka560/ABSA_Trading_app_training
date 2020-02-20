@@ -9,7 +9,6 @@ import {
 
 const initialState = {
   currencies: [{symbol: 'IBM', amount: 10}, {symbol: 'XOM', amount: 5}],
-  // stockFormScreenTitle: 'TEST',
 };
 
 function appData(state = initialState, action) {

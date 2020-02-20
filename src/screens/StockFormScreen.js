@@ -38,10 +38,10 @@ class StockFormScreen extends React.Component {
           onPress={() => {
             isAddCurrency
               ? this.props.onSubmitAddCurrency(this.state)
-              : this.props.onSubmitAmountHeldUpdate(
-                  symbolOfCurrencyUpdated,
-                  this.state.amount
-                );
+              : this.props.onSubmitAmountHeldUpdate({
+                  symbol: symbolOfCurrencyUpdated,
+                  amount: this.state.amount,
+                });
             navigation.navigate(routes.stockListScreen.name);
           }}
         />
@@ -60,19 +60,8 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = {
   onSubmitAddCurrency: addCurrencyAndReloadRates,
-  onSubmitAmountHeldUpdate: onSubmitAmountHeldUpdate,
+  onSubmitAmountHeldUpdate: changeAmountHeld,
 };
-
-function onSubmitAmountHeldUpdate(symbol, amount) {
-  return dispatch => {
-    dispatch(
-      changeAmountHeld({
-        symbol: symbol,
-        amount: amount,
-      })
-    );
-  };
-}
 
 export default connect(
   mapStateToProps,
