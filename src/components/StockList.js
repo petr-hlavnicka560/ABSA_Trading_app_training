@@ -1,11 +1,11 @@
 import React from 'react';
 import {
-  View,
-  Text,
-  FlatList,
   ActivityIndicator,
   Button,
+  FlatList,
   StyleSheet,
+  Text,
+  View,
 } from 'react-native';
 import {connect} from 'react-redux';
 import {changeStockFormScreenTitle, loadRates} from '../actions';
